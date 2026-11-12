@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My WebAssembly & HTML Game Arcade</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #121212; color: #f5f5f5; margin: 0; padding: 20px; }
+    header { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto 24px; }
+    button { background: #3b82f6; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    button:hover { background: #2563eb; }
+    button.secondary { background: #333; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+    .card { background: #1e1e1e; border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.15s; border: 1px solid #2e2e2e; }
+    .card:hover { transform: translateY(-4px); border-color: #3b82f6; }
+    .card img { width: 100%; height: 140px; object-fit: cover; background: #2a2a2a; display: block; }
+    .card h3 { margin: 12px; font-size: 1rem; }
+    .hidden { display: none; }
+    #player-view iframe { width: 100%; height: 75vh; border: none; border-radius: 8px; background: #000; }
+    .form-box { background: #1e1e1e; padding: 20px; border-radius: 10px; max-width: 500px; margin: 0 auto; }
+    .form-box input { width: 100%; padding: 10px; margin: 8px 0 16px; border-radius: 6px; border: 1px solid #444; background: #121212; color: #fff; box-sizing: border-box; }
+    .note { font-size: 0.85rem; color: #aaa; margin-bottom: 16px; line-height: 1.4; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Mear Arcade Drove</h1>
+    <div>
+      <button onclick="showSection('library')">Game Library</button>
+      <button class="secondary" onclick="showSection('admin')">+ Add / Manage Games</button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <section id="library">
+      <div class="grid" id="game-grid"></div>
+    </section>
+
+    <section id="player-view" class="hidden">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h2 id="active-game-title" style="margin:0;">Playing Game</h2>
+        <button class="secondary" onclick="closeGame()">← Back to Library</button>
+      </div>
+      <iframe id="game-frame" sandbox="allow-scripts allow-same-origin allow-pointer-lock" allowfullscreen></iframe>
+    </section>
+
+   
+    <section id="admin" class="hidden">
+      <div class="form-box">
+        <h2>Add a Game</h2>
+        <p class="note">
+          <strong>Tip:</strong> Upload your <code>.html</code> and <code>.wasm</code> files into a <code>games/</code> folder in your GitHub repo and enter <code>games/yourgame.html</code> below. Standard Google Drive share links block browser embedding.
+        </p>
+        <label>Game Title</label>
+        <input type="text" id="game-title" placeholder="e.g., Retro Platformer" />
+
+        <label>Cover Image URL</label>
+        <input type="text" id="game-img" placeholder="https://example.com or images/cover.png" />
+
+        <label>Game File Path or Embeddable URL (.html)</label>
+        <input type="text" id="game-url" placeholder="games/my-game/index.html" />
+
+        <button onclick="addGame()">Save to Library</button>
+        <button class="secondary" onclick="exportList()" style="margin-left:8px;">Copy JSON List</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+  
+    const defaultGames = [
+      {
+        title: "Sample Game (Replace Me)",
+        image: "https://placehold.co",
+        url: "games/sample/index.html"
+      }
+    ];
+
+    let games = JSON.parse(localStorage.getItem("myArcadeGames")) || defaultGames;
+
+    function renderGrid() {
+      const grid = document.getElementById("game-grid");
+      grid.innerHTML = "";
+      games.forEach((game) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.onclick = () => launchGame(game);
+        card.innerHTML = `<img src="${game.image}" alt="${game.title}"><h3>${game.title}</h3>`;
+        grid.appendChild(card);
+      });
+    }
+
+    function launchGame(game) {
+      document.getElementById("active-game-title").textContent = game.title;
+      document.getElementById("game-frame").src = game.url;
+      showSection("player-view");
+    }
+
+    function closeGame() {
+      document.getElementById("game-frame").src = "";
+      showSection("library");
+    }
+
+    function showSection(id) {
+      ["library", "player-view", "admin"].forEach(sec => {
+        document.getElementById(sec).classList.toggle("hidden", sec !== id);
+      });
+    }
+
+    function addGame() {
+      const title = document.getElementById("game-title").value.trim();
+      const image = document.getElementById("game-img").value.trim() || "https://placehold.co";
+      const url = document.getElementById("game-url").value.trim();
+      if (!title || !url) return alert("Please enter both a title and a game URL/path.");
+
+      games.push({ title, image, url });
+      localStorage.setItem("myArcadeGames", JSON.stringify(games));
+      renderGrid();
+      showSection("library");
+    }
+
+    function exportList() {
+      navigator.clipboard.writeText(JSON.stringify(games, null, 2));
+      alert("Game list copied! Paste this into 'defaultGames' in index.html to make it permanent for all visitors.");
+    }
+
+    renderGrid();
+  </script>
+</body>
+</html>
