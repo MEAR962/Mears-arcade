@@ -106,20 +106,21 @@ const games = [
 
   
 
-    function renderGrid(list) {
-      const grid = document.getElementById("game-grid");
-      grid.innerHTML = "";
-      list.forEach((game) => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.onclick = () => launchGame(game);
-        card.innerHTML = `
-          <img src="${game.image}" alt="${game.title}" onerror="this.src='https://placehold.co'">
-          <h3>${game.title}</h3>
-        `;
-        grid.appendChild(card);
-      });
-    }
+function renderGrid(list) {
+  const grid = document.getElementById("game-grid");
+  grid.innerHTML = "";
+  list.forEach((game) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.onclick = () => launchGame(game);
+    card.innerHTML = `
+      <img src="${game.image}" alt="${game.title}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://w3.org width=%22400%22 height=%22250%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23222%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23888%22 font-family=%22sans-serif%22 font-size=%2218%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22>No Cover</text></svg>';">
+      <h3>${game.title}</h3>
+    `;
+    grid.appendChild(card);
+  });
+}
+
 
     function filterGames() {
       const query = document.getElementById("search-bar").value.toLowerCase();
