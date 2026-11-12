@@ -53,67 +53,74 @@
 const games = [
   {
     title: "Scarlet Shift",
-    image: "https://gstatic.com",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs68gocBLWtSOvnwSIf_vlxDYpV3yu6Sc79n5_Q5TjIw&s=10",
     path: "games/scarletshift.html"
   },
   {
     title: "Five Nights at Freddy's 1",
-    image: "https://gstatic.com",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBxQPS5CF3XC2VG1R9c4wC5s3arug4CYyVww7NQKrEIg&s=10",
     path: "games/Five Nights at Freddy's.html"
   },
   {
     title: "Five Nights at Freddy's 2",
-    image: "https://gstatic.com",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzpINSXwTbKihGRU7dFYPdGpQs0w20OUmoG1ylymmCyQ&s=10",
     path: "games/Five Nights at Freddy's 2.html"
   },
   {
     title: "Five Nights at Freddy's 3",
-    image: "https://gstatic.com",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAtNlO64T17OsozEyTzBc-SuBZ9qeLKQUMTpGwaqOLsg&s=10",
     path: "games/Five Nights at Freddy's 3.html"
   },
   {
     title: "Five Nights at Freddy's 4",
-    image: "https://gstatic.com",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmfkaVL1cudh8nfWWf9f2ILxZdWxe-fZFGVKNe_w6KaQ&s=10",
     path: "games/Five Nights at Freddy's 4.html"
   },
   {
     title: "Five Nights at Freddy's Into The Pit",
-    image: "https://gstatic.com",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSAXBJyWZ5h0GEqBll1kvwDkypAI1baZZTj5nsADW6-Q&s=10",
     path: "games/Five Nights at Freddy's_ Into The Pit.html"
   },
   {
     title: "Five Nights at Freddy's Pizza Simulator",
-    image: "https://gstatic.com",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBg6sV9cOuFknbBNAMcdo2isEkHE1dtBELUE6sN4_rSg&s=10",
     path: "games/Five Nights at Freddy's_ Pizza Simulator.html"
   },
   {
     title: "Five Nights at Freddy's Sister Location",
-    image: "https://gstatic.com",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk_UNXolwJgPZYLAw4JEyVLnChQLSPncd-nMXa1aq9XQ&s=10",
     path: "games/Five Nights at Freddy's_ Sister Location.html"
   },
   {
     title: "Five Nights at Freddy's Ultimate Custom Night",
-    image: "https://gstatic.com",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbQcBFXEBd0KsKslFUADIeWDlmUWdEgtzNzqlEPar5PQ&s=10",
     path: "games/Five Nights at Freddy's_ Ultimate Custom Night.html"
   },
   {
     title: "Five Nights at Freddy's World",
-    image: "https://gstatic.com",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyT8m96JUQZHErbjNJhEtxFdUpL2a50nDpB2RNHWdtNQ&s=10",
     path: "games/Five Nights at Freddy's_ World.html"
   },
 ];
-
+    
 function renderGrid(list) {
   const grid = document.getElementById("game-grid");
   grid.innerHTML = "";
+  const fallbackImg = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
+    '<svg xmlns="http://w3.org" width="400" height="250"><rect width="100%" height="100%" fill="#222"/><text x="50%" y="50%" fill="#888" font-family="sans-serif" font-size="18" dominant-baseline="middle" text-anchor="middle">No Cover</text></svg>'
+  );
   list.forEach((game) => {
     const card = document.createElement("div");
     card.className = "card";
     card.onclick = () => launchGame(game);
-    card.innerHTML = `
-      <img src="${game.image}" alt="${game.title}" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://w3.org width=%22400%22 height=%22250%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23222%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23888%22 font-family=%22sans-serif%22 font-size=%2218%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22>No Cover</text></svg>';">
-      <h3>${game.title}</h3>
-    `;
+    const img = document.createElement("img");
+    img.src = game.image;
+    img.alt = game.title;
+    img.onerror = () => { img.onerror = null; img.src = fallbackImg; };
+    const title = document.createElement("h3");
+    title.textContent = game.title;
+    card.appendChild(img);
+    card.appendChild(title);
     grid.appendChild(card);
   });
 }
