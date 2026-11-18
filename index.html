@@ -1,288 +1,317 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mears Arcade Cove</title>
-  <style>
-    body { font-family: system-ui, sans-serif; background: #121212; color: #f5f5f5; margin: 0; padding: 20px; }
-    header { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto 24px; gap: 16px; flex-wrap: wrap; }
-    header h1 { margin: 0; }
-    #search-bar { padding: 10px 14px; border-radius: 6px; border: 1px solid #333; background: #1e1e1e; color: #fff; width: 260px; font-size: 0.95rem; }
-    button { background: #3b82f6; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    button:hover { background: #2563eb; }
-    button.secondary { background: #333; }
-    button.secondary:hover { background: #444; }
-    .container { max-width: 1100px; margin: 0 auto; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-       .card {
-      background: #1e1e1e;
-      border-radius: 10px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.15s, border-color 0.15s;
-      border: 1px solid #2e2e2e;
-      display: flex;
-      flex-direction: column;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: #3b82f6;
-    }
-    .card img {
-      width: 100%;
-      height: 220px;
-      object-fit: contain;
-      background: #0f0f0f;
-      display: block;
-    }
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Mears Arcade Cove</title>
+ <style>
+   body { font-family: system-ui, sans-serif; background: #121212; color: #f5f5f5; margin: 0; padding: 20px; }
+   header { display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto 24px; gap: 16px; flex-wrap: wrap; }
+   header h1 { margin: 0; }
+   #search-bar { padding: 10px 14px; border-radius: 6px; border: 1px solid #333; background: #1e1e1e; color: #fff; width: 260px; font-size: 0.95rem; }
+   button { background: #3b82f6; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+   button:hover { background: #2563eb; }
+   button.secondary { background: #333; }
+   button.secondary:hover { background: #444; }
+   .container { max-width: 1100px; margin: 0 auto; }
+   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+      .card {
+     background: #1e1e1e;
+     border-radius: 10px;
+     overflow: hidden;
+     cursor: pointer;
+     transition: transform 0.15s, border-color 0.15s;
+     border: 1px solid #2e2e2e;
+     display: flex;
+     flex-direction: column;
+   }
+   .card:hover {
+     transform: translateY(-4px);
+     border-color: #3b82f6;
+   }
+   .card img {
+     width: 100%;
+     height: 220px;
+     object-fit: contain;
+     background: #0f0f0f;
+     display: block;
+   }
 
 
-    .card h3 { margin: 12px; font-size: 1rem; }
-    .hidden { display: none; }
-    #player-view iframe { width: 100%; height: 78vh; border: none; border-radius: 8px; background: #000; }
-  </style>
+
+
+
+
+   .card h3 { margin: 12px; font-size: 1rem; }
+   .hidden { display: none; }
+   #player-view iframe { width: 100%; height: 78vh; border: none; border-radius: 8px; background: #000; }
+ </style>
 </head>
 <body>
 
-  <header>
-    <h1>Mears Arcade Cove</h1>
-    <input type="text" id="search-bar" placeholder="Search games..." oninput="filterGames()" />
-  </header>
 
-  <div class="container">
 
-    <section id="library">
-      <div class="grid" id="game-grid"></div>
-    </section>
+ <header>
+   <h1>Mears Arcade Cove</h1>
+   <input type="text" id="search-bar" placeholder="Search games..." oninput="filterGames()" />
+ </header>
 
-    <section id="player-view" class="hidden">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h2 id="active-game-title" style="margin:0;">Playing Game</h2>
-        <div>
-          <button onclick="goFullscreen()" style="margin-right:8px;">⛶ Fullscreen</button>
-          <button class="secondary" onclick="closeGame()">← Back to Library</button>
-        </div>
-      </div>
-      <iframe id="game-frame" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-downloads" allowfullscreen></iframe>
-    </section>
-  </div>
 
-  <script>
+
+ <div class="container">
+
+
+
+   <section id="library">
+     <div class="grid" id="game-grid"></div>
+   </section>
+
+
+
+   <section id="player-view" class="hidden">
+     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+       <h2 id="active-game-title" style="margin:0;">Playing Game</h2>
+       <div>
+         <button onclick="goFullscreen()" style="margin-right:8px;">⛶ Fullscreen</button>
+         <button class="secondary" onclick="closeGame()">← Back to Library</button>
+       </div>
+     </div>
+     <iframe id="game-frame" sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-downloads" allowfullscreen></iframe>
+   </section>
+ </div>
+
+
+
+ <script>
+
+
 
 const games = [
-  {
-    title: "Scarlet Shift",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs68gocBLWtSOvnwSIf_vlxDYpV3yu6Sc79n5_Q5TjIw&s=10",
-    path: "games/scarletshift.html"
-  },
-  {
-    title: "Five Nights at Freddy's 1",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBxQPS5CF3XC2VG1R9c4wC5s3arug4CYyVww7NQKrEIg&s=10",
-    path: "games/Five Nights at Freddy's.html"
-  },
-  {
-    title: "Five Nights at Freddy's 2",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzpINSXwTbKihGRU7dFYPdGpQs0w20OUmoG1ylymmCyQ&s=10",
-    path: "games/Five Nights at Freddy's 2.html"
-  },
-  {
-    title: "Five Nights at Freddy's 3",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAtNlO64T17OsozEyTzBc-SuBZ9qeLKQUMTpGwaqOLsg&s=10",
-    path: "games/Five Nights at Freddy's 3.html"
-  },
-  {
-    title: "Five Nights at Freddy's 4",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmfkaVL1cudh8nfWWf9f2ILxZdWxe-fZFGVKNe_w6KaQ&s=10",
-    path: "games/Five Nights at Freddy's 4.html"
-  },
-  {
-    title: "Five Nights at Freddy's Into The Pit",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSAXBJyWZ5h0GEqBll1kvwDkypAI1baZZTj5nsADW6-Q&s=10",
-    path: "games/Five Nights at Freddy's_ Into The Pit.html"
-  },
-  {
-    title: "Five Nights at Freddy's Pizza Simulator",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBg6sV9cOuFknbBNAMcdo2isEkHE1dtBELUE6sN4_rSg&s=10",
-    path: "games/Five Nights at Freddy's_ Pizza Simulator.html"
-  },
-  {
-    title: "Five Nights at Freddy's Sister Location",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk_UNXolwJgPZYLAw4JEyVLnChQLSPncd-nMXa1aq9XQ&s=10",
-    path: "games/Five Nights at Freddy's_ Sister Location.html"
-  },
-  {
-    title: "Five Nights at Freddy's Ultimate Custom Night",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbQcBFXEBd0KsKslFUADIeWDlmUWdEgtzNzqlEPar5PQ&s=10",
-    path: "games/Five Nights at Freddy's_ Ultimate Custom Night.html"
-  },
-  {
-    title: "Five Nights at Freddy's World",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyT8m96JUQZHErbjNJhEtxFdUpL2a50nDpB2RNHWdtNQ&s=10",
-    path: "games/Five Nights at Freddy's_ World.html"
-  },
-  {
-    title: "Bad Parenting",
-    image: "",
-    path: "games/bad.html"
-  },
-  {
-    title: "Balatro",
-    image: "",
-    path: "games/balatro.html"
-  },
-  {
-    title: "Bendy and the Ink Machine",
-    image: "",
-    path: "games/bendy.html"
-  },
-  {
-    title: "Brawlhalla",
-    image: "",
-    path: "games/brawlhalla.html"
-  },
-  {
-    title: "Brotato",
-    image: "",
-    path: "games/brotato.html"
-  },
-  {
-    title: "Clustertruck",
-    image: "",
-    path: "games/clustertruck.html"
-  },
-  {
-    title: "Cult of the Lamb",
-    image: "",
-    path: "games/cotl.html"
-  },
-  {
-    title: "The Deadseat",
-    image: "",
-    path: "games/deadseat.html"
-  },
-  {
-    title: "Dice a Million",
-    image: "",
-    path: "games/diceamillion.html"
-  },
-  {
-    title: "Don't Starve Together",
-    image: "",
-    path: "games/dst.html"
-  },
-  {
-    title: "Endacopia",
-    image: "",
-    path: "games/endacopia.html"
-  },
-  {
-    title: "Gamble with your friends",
-    image: "",
-    path: "games/gamble.html"
-  },
-  {
-    title: "Gambonanza",
-    image: "",
-    path: "games/gambonanza.html"
-  },
-  {
-    title: "Balatro Modded",
-    image: "",
-    path: "games/games.html"
-  },
-  {
-    title: "Gang Beasts",
-    image: "",
-    path: "games/gangbeasts.html"
-  },
-  {
-    title: "Geometry Dash",
-    image: "",
-    path: "games/geo.html"
-  },
-  {
-    title: "Hollow Knight",
-    image: "",
-    path: "games/glitchhk.html"
-  },
-  {
-    title: "Getting Over It",
-    image: "",
-    path: "games/goi.html"
-  },
-  {
-    title: "How To Fish",
-    image: "",
-    path: "games/HowToFish.html"
-  },
-  {
-    title: "Iron Lung",
-    image: "",
-    path: "games/ironlung.html"
-  },
-  {
-    title: "cuphead",
-    image: "",
-    path: "games/index.html"
-  },
-  {
-    title: "Undertale / Deltarune",
-    image: "",
-    path: "games/toby_fox.html"
-  },
+ {
+   title: "Scarlet Shift",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs68gocBLWtSOvnwSIf_vlxDYpV3yu6Sc79n5_Q5TjIw&s=10",
+   path: "games/scarletshift.html"
+ },
+ {
+   title: "Five Nights at Freddy's 1",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBxQPS5CF3XC2VG1R9c4wC5s3arug4CYyVww7NQKrEIg&s=10",
+   path: "games/Five Nights at Freddy's.html"
+ },
+ {
+   title: "Five Nights at Freddy's 2",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzpINSXwTbKihGRU7dFYPdGpQs0w20OUmoG1ylymmCyQ&s=10",
+   path: "games/Five Nights at Freddy's 2.html"
+ },
+ {
+   title: "Five Nights at Freddy's 3",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAtNlO64T17OsozEyTzBc-SuBZ9qeLKQUMTpGwaqOLsg&s=10",
+   path: "games/Five Nights at Freddy's 3.html"
+ },
+ {
+   title: "Five Nights at Freddy's 4",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmfkaVL1cudh8nfWWf9f2ILxZdWxe-fZFGVKNe_w6KaQ&s=10",
+   path: "games/Five Nights at Freddy's 4.html"
+ },
+ {
+   title: "Five Nights at Freddy's Into The Pit",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSAXBJyWZ5h0GEqBll1kvwDkypAI1baZZTj5nsADW6-Q&s=10",
+   path: "games/Five Nights at Freddy's_ Into The Pit.html"
+ },
+ {
+   title: "Five Nights at Freddy's Pizza Simulator",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBg6sV9cOuFknbBNAMcdo2isEkHE1dtBELUE6sN4_rSg&s=10",
+   path: "games/Five Nights at Freddy's_ Pizza Simulator.html"
+ },
+ {
+   title: "Five Nights at Freddy's Sister Location",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQk_UNXolwJgPZYLAw4JEyVLnChQLSPncd-nMXa1aq9XQ&s=10",
+   path: "games/Five Nights at Freddy's_ Sister Location.html"
+ },
+ {
+   title: "Five Nights at Freddy's Ultimate Custom Night",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbQcBFXEBd0KsKslFUADIeWDlmUWdEgtzNzqlEPar5PQ&s=10",
+   path: "games/Five Nights at Freddy's_ Ultimate Custom Night.html"
+ },
+ {
+   title: "Five Nights at Freddy's World",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyT8m96JUQZHErbjNJhEtxFdUpL2a50nDpB2RNHWdtNQ&s=10",
+   path: "games/Five Nights at Freddy's_ World.html"
+ },
+ {
+   title: "Bad Parenting",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNAEHrzzepjb797AcNHxskoAlzMN2iirE1lfrveBCj3w&s=10",
+   path: "games/bad.html"
+ },
+ {
+   title: "Balatro",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQy_lHuHuuzvXspKjAjg1dI5F9wwUEMYWWHQL5plSeeig&s=10",
+   path: "games/balatro.html"
+ },
+ {
+   title: "Bendy and the Ink Machine",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJ8lPbYYWjTubJ0wQCjy_69-hMoY6COL6hAhZaooEtpQ&s=10",
+   path: "games/bendy.html"
+ },
+ {
+   title: "Brawlhalla",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWx9jX6nEx2AnR95pWU1HtH1BAI_4SLx1D2u1UYXtaYg&s=10",
+   path: "games/brawlhalla.html"
+ },
+ {
+   title: "Brotato",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI2bHKDb_ZFCGtQeYtN5-G7YdFYw9Z6e2isWdPGQc2QA&s=10",
+   path: "games/brotato.html"
+ },
+ {
+   title: "Clustertruck",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5odGY13pQ-w2PeFLSU_tzUCrRae5PksU0EpGSgBr20w&s=10",
+   path: "games/clustertruck.html"
+ },
+ {
+   title: "Cult of the Lamb",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFMTWp1MKlgDQKoNftMqXky_y6naxneigDX9Mhwk8EOw&s=10",
+   path: "games/cotl.html"
+ },
+ {
+   title: "The Deadseat",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH7FhyiAdVEZMDgA4T5N7fx_7-ZFz45i716SfTtcmAvQ&s",
+   path: "games/deadseat.html"
+ },
+ {
+   title: "Dice a Million",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUo4qfw-GWGdGDnZrxNKJ_FhSyEnJ2Ifj_I_5F9ucXhw&s=10",
+   path: "games/diceamillion.html"
+ },
+ {
+   title: "Don't Starve Together",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwv6NlxoAScF173rY54uTAejjmudLoJEpxkbDVs6A6ag&s=10",
+   path: "games/dst.html"
+ },
+ {
+   title: "Endacopia",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKgcjmC57JtN9aXMmO1rJQCd0OCOlQqnsSUNslHPky7A&s=10",
+   path: "games/endacopia.html"
+ },
+ {
+   title: "Gamble with your friends",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmpCdjKF4r-3XI7g1X1i3dIcFcfYuktn0UH7E0yFSGwQ&s=10",
+   path: "games/gamble.html"
+ },
+ {
+   title: "Gambonanza",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSRVI-eqDOYqMxNgWsW5Xhxl2gO1S6mpeGO14H-QK0Ow&s",
+   path: "games/gambonanza.html"
+ },
+ {
+   title: "Balatro Modded",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMP-tcIMaTSeeE2ywJUJc3AY6j_fMgUaktMLVdx3p37Q&s=10",
+   path: "games/games.html"
+ },
+ {
+   title: "Gang Beasts",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZp6lXOAC9vKTuviyu69750VAs_WST5hLuiP1dYKTvtw&s=10",
+   path: "games/gangbeasts.html"
+ },
+ {
+   title: "Geometry Dash",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6qtNnhVD9Gcu68UP8PBVpHdh_M_gYY4VsJUMcyZuiQQ&s",
+   path: "games/geo.html"
+ },
+ {
+   title: "Hollow Knight",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbUsdyXJdqFZ3kMNOYgOt5meuxothrTE7YF4uu9cBnGw&s=10",
+   path: "games/glitchhk.html"
+ },
+ {
+   title: "Getting Over It",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRht05XtdUrwcopp6V8haF7DOVmmANiemMPaAZODGSMnA&s=10",
+   path: "games/goi.html"
+ },
+ {
+   title: "How To Fish",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy0IVQwk7CicKd1nhGMusIS3Hfb0Sbr1amLfalVn2YTQ&s=10",
+   path: "games/HowToFish.html"
+ },
+ {
+   title: "Iron Lung",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRzdy7OFq-lUhsyIhxrVkQjSh-M91pKSgGPhcTuLyohQ&s=10",
+   path: "games/ironlung.html"
+ },
+ {
+   title: "cuphead",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFBL5rw6yUuUnbIdEksVIY9yMnUF-W0i15dkEQji52vQ&s",
+   path: "games/index.html"
+ },
+ {
+   title: "Undertale / Deltarune",
+   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0_gNIos7-u2vbT8F97ewMZwzEBWSH-z8YB0SN9lJzzg&s=10",
+   path: "games/toby_fox.html"
+ },
 ];
-    
+  
 function renderGrid(list) {
-  const grid = document.getElementById("game-grid");
-  grid.innerHTML = "";
-  const fallbackImg = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
-    '<svg xmlns="http://w3.org" width="400" height="250"><rect width="100%" height="100%" fill="#222"/><text x="50%" y="50%" fill="#888" font-family="sans-serif" font-size="18" dominant-baseline="middle" text-anchor="middle">No Cover</text></svg>'
-  );
-  list.forEach((game) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.onclick = () => launchGame(game);
-    const img = document.createElement("img");
-    img.src = game.image;
-    img.alt = game.title;
-    img.onerror = () => { img.onerror = null; img.src = fallbackImg; };
-    const title = document.createElement("h3");
-    title.textContent = game.title;
-    card.appendChild(img);
-    card.appendChild(title);
-    grid.appendChild(card);
-  });
+ const grid = document.getElementById("game-grid");
+ grid.innerHTML = "";
+ const fallbackImg = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
+   '<svg xmlns="http://w3.org" width="400" height="250"><rect width="100%" height="100%" fill="#222"/><text x="50%" y="50%" fill="#888" font-family="sans-serif" font-size="18" dominant-baseline="middle" text-anchor="middle">No Cover</text></svg>'
+ );
+ list.forEach((game) => {
+   const card = document.createElement("div");
+   card.className = "card";
+   card.onclick = () => launchGame(game);
+   const img = document.createElement("img");
+   img.src = game.image;
+   img.alt = game.title;
+   img.onerror = () => { img.onerror = null; img.src = fallbackImg; };
+   const title = document.createElement("h3");
+   title.textContent = game.title;
+   card.appendChild(img);
+   card.appendChild(title);
+   grid.appendChild(card);
+ });
 }
 
 
-    function filterGames() {
-      const query = document.getElementById("search-bar").value.toLowerCase();
-      const filtered = games.filter(g => g.title.toLowerCase().includes(query));
-      renderGrid(filtered);
-    }
 
-    function launchGame(game) {
-      document.getElementById("active-game-title").textContent = game.title;
-      document.getElementById("game-frame").src = game.path;
-      document.getElementById("library").classList.add("hidden");
-      document.getElementById("search-bar").classList.add("hidden");
-      document.getElementById("player-view").classList.remove("hidden");
-    }
 
-    function closeGame() {
-      document.getElementById("game-frame").src = "";
-      document.getElementById("player-view").classList.add("hidden");
-      document.getElementById("library").classList.remove("hidden");
-      document.getElementById("search-bar").classList.remove("hidden");
-    }
 
-    function goFullscreen() {
-      const frame = document.getElementById("game-frame");
-      if (frame.requestFullscreen) frame.requestFullscreen();
-    }
 
-    renderGrid(games);
-  </script>
+   function filterGames() {
+     const query = document.getElementById("search-bar").value.toLowerCase();
+     const filtered = games.filter(g => g.title.toLowerCase().includes(query));
+     renderGrid(filtered);
+   }
+
+
+
+   function launchGame(game) {
+     document.getElementById("active-game-title").textContent = game.title;
+     document.getElementById("game-frame").src = game.path;
+     document.getElementById("library").classList.add("hidden");
+     document.getElementById("search-bar").classList.add("hidden");
+     document.getElementById("player-view").classList.remove("hidden");
+   }
+
+
+
+   function closeGame() {
+     document.getElementById("game-frame").src = "";
+     document.getElementById("player-view").classList.add("hidden");
+     document.getElementById("library").classList.remove("hidden");
+     document.getElementById("search-bar").classList.remove("hidden");
+   }
+
+
+
+   function goFullscreen() {
+     const frame = document.getElementById("game-frame");
+     if (frame.requestFullscreen) frame.requestFullscreen();
+   }
+
+
+
+   renderGrid(games);
+ </script>
 </body>
 </html>
+
